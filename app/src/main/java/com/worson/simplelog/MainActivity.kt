@@ -2,7 +2,6 @@ package com.worson.simplelog
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import app.worson.simplelog.R
 import com.worson.lib.log.L
 import com.worson.lib.log.SimpleLog
