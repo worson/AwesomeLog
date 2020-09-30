@@ -1,8 +1,6 @@
 package com.worson.simplelog
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import app.worson.simplelog.R
+import android.content.Context
 import com.langogo.lib.log.internal.Platform
 import com.langogo.lib.log.printer.FilePrinter
 import com.langogo.lib.log.printer.Printer
@@ -15,27 +13,18 @@ import com.worson.lib.log.LogConfiguration
 import com.worson.lib.log.LogLevel
 import java.io.File
 
-class MainActivity : AppCompatActivity() {
+/**
+ * 说明:
+ * @author worson  09.30 2020
+ */
+object LogInit {
 
-    val  TAG = "MainActivity"
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-//        initLogSimple()
-        initLogFile()
-
-        L.i(TAG, "onCreate: ")
-        L.d(TAG) {"onCreate: "}
-
-    }
-
-    private fun initLogFile() {
-        val debug=true
+    fun initFileLog(context: Context,debug:Boolean=true) {
         var filePrinter: Printer?=null
-        var logHandler:ZipLogHandler?=null
+        var logHandler: ZipLogHandler?=null
         var logUploader: LogFileReporter?=null
-        val logPath = File(cacheDir.absolutePath,"log")
+        val logPath = File(context.cacheDir,"log")
         L.init(
             LogConfiguration.Builder()
                 .logLevel(if (debug) LogLevel.ALL else LogLevel.DEBUG)
@@ -67,8 +56,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initLogSimple() {
-        val debug=true
+     fun initConsoleLog(debug:Boolean=true) {
         L.init(
             LogConfiguration.Builder()
                 .logLevel(if (debug) LogLevel.ALL else LogLevel.DEBUG)
@@ -78,7 +66,4 @@ class MainActivity : AppCompatActivity() {
                 .build()
         )
     }
-
-
-
 }

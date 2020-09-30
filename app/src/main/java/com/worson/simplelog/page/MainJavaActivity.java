@@ -1,4 +1,4 @@
-package com.worson.simplelog;
+package com.worson.simplelog.page;
 
 import android.os.Bundle;
 
