@@ -31,7 +31,7 @@ class LogConfiguration(val logLevel:Int = LogLevel.INFO, val tag: String,
 
         private var withStackTrace = false
 
-        private var stackTraceDepth = 6
+        private var stackTraceDepth = 7
 
         private var formater: Flattener =
             BasicFlattener()
@@ -55,7 +55,7 @@ class LogConfiguration(val logLevel:Int = LogLevel.INFO, val tag: String,
             withThread = isOpen
             return this
         }
-        fun traceInfo(isOpen:Boolean, depth: Int=6): Builder {
+        fun traceInfo(isOpen:Boolean, depth: Int=7): Builder {
             withStackTrace=isOpen
             stackTraceDepth=depth
             return this

@@ -12,7 +12,7 @@ import kotlin.math.min
  * 说明:
  * @author worson  07.17 2020
  */
-class ZipLogHandler(val fileDir:String,val limitSize:Long=100*1024*1024,val password:String="heyan1234",val reporter: LogFileReporter):
+class ZipLogHandler(val fileDir:String,val limitSize:Long=100*1024*1024,val password:String="awesome1234",val reporter: LogFileReporter?):
     LogFileHandler(fileDir) {
     private val  TAG = "ZipLogHandler"
     private val L = LogDebug.debugLogger
