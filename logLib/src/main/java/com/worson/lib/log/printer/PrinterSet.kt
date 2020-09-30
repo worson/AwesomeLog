@@ -1,6 +1,6 @@
 package com.langogo.lib.log.printer
 
-import com.langogo.lib.log.LogItem
+import com.worson.lib.log.LogItem
 
 /**
  * 说明:

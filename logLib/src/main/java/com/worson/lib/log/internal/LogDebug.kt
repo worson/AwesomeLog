@@ -1,8 +1,8 @@
 package com.langogo.lib.log.internal
 
-import com.langogo.lib.log.LogConfiguration
-import com.langogo.lib.log.LogLevel
-import com.langogo.lib.log.Logger
+import com.worson.lib.log.LogConfiguration
+import com.worson.lib.log.LogLevel
+import com.worson.lib.log.Logger
 
 /**
  * 说明:
@@ -13,7 +13,7 @@ import com.langogo.lib.log.Logger
     var IS_DEBUG = false
     var TRACE_DEPTH = 5
 
-    val debugLogger:Logger by lazy {
+    val debugLogger: Logger by lazy {
         val debug=IS_DEBUG
         Logger(
             LogConfiguration.Builder()

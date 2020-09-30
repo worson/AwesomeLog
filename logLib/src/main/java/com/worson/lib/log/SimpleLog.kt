@@ -1,7 +1,6 @@
-package com.langogo.lib.log
+package com.worson.lib.log
 
 import com.langogo.lib.log.internal.Platform
-import com.langogo.lib.log.rpc.SocketClientPrinter
 
 /**
  * 说明:
@@ -9,12 +8,13 @@ import com.langogo.lib.log.rpc.SocketClientPrinter
  */
 object SimpleLog {
 
+    @JvmStatic
     fun initConsolePrint(debug:Boolean){
         L.init(
             LogConfiguration.Builder()
                 .logLevel(if (debug) LogLevel.ALL else LogLevel.DEBUG)
                 .threadInfo(debug)
-                .traceInfo(debug, 6)
+                .traceInfo(debug, 7)
                 .addPrinter(Platform.get().defaultPrinter())
                 .build()
         )

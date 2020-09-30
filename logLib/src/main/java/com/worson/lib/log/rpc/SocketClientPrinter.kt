@@ -1,6 +1,6 @@
 package com.langogo.lib.log.rpc
 
-import com.langogo.lib.log.LogItem
+import com.worson.lib.log.LogItem
 import com.langogo.lib.log.format.BasicFlattener
 import com.langogo.lib.log.format.Flattener
 import com.langogo.lib.log.internal.LogDebug

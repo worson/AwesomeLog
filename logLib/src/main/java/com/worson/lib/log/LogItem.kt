@@ -1,4 +1,4 @@
-package com.langogo.lib.log
+package com.worson.lib.log
 
 /**
  * 说明:日志结点

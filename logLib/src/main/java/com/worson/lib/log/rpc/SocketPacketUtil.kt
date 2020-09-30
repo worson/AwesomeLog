@@ -1,11 +1,8 @@
 package com.langogo.lib.log.rpc
 
-import com.langogo.lib.log.L
+import com.worson.lib.log.L
 import com.langogo.lib.log.rpc.PacketProtocol.INDEX_DATA_LENGTH
 import com.langogo.lib.log.rpc.PacketProtocol.INDEX_FLAG_START
-import com.langogo.lib.log.rpc.PacketProtocol.LENGTH_CRC_SIZE
-import com.langogo.lib.log.rpc.PacketProtocol.MAX_PACKET_DATA_SIZE
-import com.langogo.lib.log.rpc.PacketProtocol.MAX_PACKET_SIZE
 import com.langogo.lib.log.rpc.PacketProtocol.PACKET_WRAPPER_SIZE
 import java.nio.ByteBuffer
 import java.util.zip.CRC32

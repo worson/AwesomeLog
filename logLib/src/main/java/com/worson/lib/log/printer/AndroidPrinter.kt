@@ -1,6 +1,6 @@
 package com.langogo.lib.log.printer
 
-import com.langogo.lib.log.LogItem
+import com.worson.lib.log.LogItem
 import com.langogo.lib.log.format.BasicFlattener
 import com.langogo.lib.log.format.Flattener
 import java.lang.reflect.Method

@@ -1,78 +1,221 @@
 package com.worson.lib.log
 
-import android.util.Log
+import com.langogo.lib.log.internal.Platform
+import com.langogo.lib.log.printer.FilePrinter
+import com.langogo.lib.log.printer.Printer
+import com.langogo.lib.log.printer.file.DateFileNameGenerator
+import com.langogo.lib.log.printer.file.handler.ZipLogHandler
+import com.langogo.lib.log.printer.file.reporter.LogFileReporter
+import com.langogo.lib.log.rpc.SocketClientPrinter
+import com.langogo.lib.log.rpc.SocketSeverPrinterProxy
+import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
 
 /**
  * 说明:
- * @author worson  09.22 2020
+ * @author worson  07.17 2020
  */
-
 object L {
-    private var logLevel = Log.INFO
-    private var isStackTrace:Boolean=true
-    private var stackTraceDepth:Int=5
 
-    const val TAG_PREFIX = "LogX"
+    private var logLevel= LogLevel.INFO
+    private var TAG_PREFIX = ""
 
+    private lateinit  var mLogger: Logger
 
-    @JvmStatic
-    fun init(logLevel: Int) {
-        i(TAG_PREFIX,"init#logLevel=${logLevel}")
-        L.logLevel = logLevel
+    init {
+        init(
+            LogConfiguration.Builder()
+                .addPrinter(Platform.get().defaultPrinter())
+                .build()
+        )
     }
 
     @JvmStatic
-    fun setStackTrace(isStackTrace:Boolean=true,stackTraceDepth:Int=5){
-        L.isStackTrace =isStackTrace
-        L.stackTraceDepth =stackTraceDepth
+    fun init(debug:Boolean,stackDepth:Int=6,logPath:File?){
+        if (logPath==null){
+            init(
+                LogConfiguration.Builder()
+                    .logLevel(if (debug) LogLevel.ALL else LogLevel.DEBUG)
+                    .threadInfo(debug)
+                    .traceInfo(debug, stackDepth)
+                    .addPrinter(Platform.get().defaultPrinter())
+                    .addPrinter(SocketClientPrinter())
+                    .build()
+            )
+        }else{
+            var filePrinter:Printer?=null
+            init(
+                LogConfiguration.Builder()
+                    .logLevel(if (debug) LogLevel.ALL else LogLevel.DEBUG)
+                    .threadInfo(true)
+                    .traceInfo(debug, stackDepth)
+                    .addPrinter(Platform.get().defaultPrinter())
+                    .addPrinter(
+                        FilePrinter.Builder(
+                            File(logPath.absolutePath, "logging").absolutePath)
+                            .fileNameGenerator(DateFileNameGenerator())
+                            .logHandler(
+                                ZipLogHandler(
+                                    File(logPath.absolutePath, "backup").absolutePath,
+                                    limitSize = 100 * 1024 * 1024,
+                                    password="heyan1234",
+                                    reporter = LogFileReporter(File(logPath.absolutePath, "upload"))
+                                )
+                            )
+                            .build().apply {
+                                filePrinter=this
+                            }
+                    )
+                    .build()
+            )
+            filePrinter?.let {
+                SocketSeverPrinterProxy(it).start()
+            }
+        }
+
+
+    }
+
+
+    @JvmStatic
+    fun init( configuration: LogConfiguration) {
+        mLogger = Logger(configuration)
+        logLevel =configuration.logLevel
+        TAG_PREFIX =configuration.tag
+        println("init#logLevel=$logLevel")
     }
 
     @JvmStatic
-    @Deprecated("please use msg:() -> Any?")
-    fun d(tag: String, msg: Any?) {
-        log(priority = Log.DEBUG, tag = "$TAG_PREFIX#$tag", holder = { msg })
+    fun flush(type:Int=0) {
+        i(TAG_PREFIX, "flush: ${type}")
+        mLogger?.flush(type)
+    }
+
+    @JvmStatic
+    fun v(tag: String, msg:() -> Any) {
+        log(
+            priority = LogLevel.VERBOSE,
+            tag = "$TAG_PREFIX#$tag",
+            holder = msg
+        )
+    }
+
+    @JvmStatic
+    fun d( msg: Any) {
+        log(
+            priority = LogLevel.DEBUG,
+            tag = TAG_PREFIX,
+            msg = msg
+        )
+    }
+
+    @JvmStatic
+    fun d(tag: String, msg: Any) {
+        log(
+            priority = LogLevel.DEBUG,
+            tag = "$TAG_PREFIX#$tag",
+            msg = msg
+        )
     }
 
 
     @JvmStatic
-    fun d(tag: String, msg: () -> Any?) {
-        log(priority = Log.DEBUG, tag = "$TAG_PREFIX#$tag", holder = msg)
+    fun d(tag: String, msg:() -> Any) {
+        log(
+            priority = LogLevel.DEBUG,
+            tag = "$TAG_PREFIX#$tag",
+            holder = msg
+        )
     }
 
+    @JvmStatic
+    fun i(msg: Any?) {
+        log(
+            priority = LogLevel.INFO,
+            tag = TAG_PREFIX,
+            holder = { msg })
+    }
 
     @JvmStatic
     fun i(tag: String, msg: Any?) {
-        log(priority = Log.INFO, tag = "$TAG_PREFIX#$tag", holder = { msg })
+        log(
+            priority = LogLevel.INFO,
+            tag = "$TAG_PREFIX#$tag",
+            holder = { msg })
     }
 
     @JvmStatic
-    fun i(tag: String, msg: () -> Any?) {
-        log(priority = Log.INFO, tag = "$TAG_PREFIX#$tag", holder = msg)
+    fun i(msg:() -> Any?) {
+        log(
+            priority = LogLevel.INFO,
+            tag = TAG_PREFIX,
+            holder = msg
+        )
+    }
+
+    @JvmStatic
+    fun i(tag: String, msg:() -> Any?) {
+        log(
+            priority = LogLevel.INFO,
+            tag = "$TAG_PREFIX#$tag",
+            holder = msg
+        )
+    }
+
+    @JvmStatic
+    fun w(msg: Any?) {
+        log(
+            priority = LogLevel.WARN,
+            tag = TAG_PREFIX,
+            holder = { msg })
     }
 
     @JvmStatic
     fun w(tag: String, msg: Any?) {
-        log(priority = Log.WARN, tag = "$TAG_PREFIX#$tag", holder = { msg })
+        log(
+            priority = LogLevel.WARN,
+            tag = "$TAG_PREFIX#$tag",
+            holder = { msg })
     }
-
 
     @JvmStatic
-    fun w(tag: String, msg: () -> Any?) {
-        log(priority = Log.WARN, tag = "$TAG_PREFIX#$tag", holder = msg)
+    fun w(msg:() -> Any?) {
+        log(
+            priority = LogLevel.WARN,
+            tag = TAG_PREFIX,
+            holder = msg
+        )
     }
 
+    @JvmStatic
+    fun w(tag: String, msg:() -> Any?) {
+        log(
+            priority = LogLevel.WARN,
+            tag = "$TAG_PREFIX#$tag",
+            holder = msg
+        )
+    }
+
+    @JvmStatic
+    fun e(msg: Any?) {
+        log(
+            priority = LogLevel.ERROR,
+            tag = TAG_PREFIX,
+            holder = { msg })
+    }
 
     @JvmStatic
     fun e(tag: String, msg: Any?) {
-        log(priority = Log.ERROR, tag = "$TAG_PREFIX#$tag", holder = { msg })
+        log(
+            priority = LogLevel.ERROR,
+            tag = "$TAG_PREFIX#$tag",
+            holder = { msg })
     }
-
     @JvmStatic
     fun e(tag: String, msg: Any?, throwable: Throwable?) {
         log(
-            priority = Log.ERROR,
+            priority = LogLevel.ERROR,
             tag = "$TAG_PREFIX#$tag",
             msg = throwable?.let {
                 "$msg\n${throwableToString(throwable)}"
@@ -91,8 +234,8 @@ object L {
     }
 
     @JvmStatic
-    private fun log(priority: Int, tag: String, msg: Any?) {
-        if (logLevel <= priority) {
+    private fun log(priority: Int, tag: String, msg: Any) {
+        if (logLevel <=priority){
             val message = if (msg is Throwable) {
                 val sw = StringWriter(256)
                 val pw = PrintWriter(sw, false)
@@ -102,21 +245,15 @@ object L {
             } else {
                 msg?.toString() ?: "null"
             }
-            val newTag=if (isStackTrace){
-                "${tag} ${getRuntimeCaller(stackTraceDepth)}"
-            }else{
-                tag
-            }
-
-            Log.println(priority, newTag, message)
+            mLogger?.println(LogItem(priority, tag, message))
         }
     }
 
 
     @JvmStatic
-    private fun log(priority: Int, tag: String, holder: () -> Any?) {
-        if (logLevel <= priority) {
-            val msg = holder()
+    private fun log(priority: Int, tag: String, holder:() -> Any?) {
+        if (logLevel <=priority){
+            val msg=holder()
             val message = if (msg is Throwable) {
                 val sw = StringWriter(256)
                 val pw = PrintWriter(sw, false)
@@ -126,41 +263,7 @@ object L {
             } else {
                 msg?.toString() ?: "null"
             }
-            val newTag=if (isStackTrace){
-                "${tag} ${getRuntimeCaller(stackTraceDepth)}"
-            }else{
-                tag
-            }
-            Log.println(priority, newTag, message)
+            mLogger?.println(LogItem(priority, tag, message))
         }
-
     }
-
-    private fun getRuntimeCaller(maxDepth: Int): String {
-        val stackTrace =
-            Thread.currentThread().stackTrace
-        val index: Int =
-            getStackOffset(
-                stackTrace,
-                maxDepth
-            )
-        if (index == -1) {
-            return "[]"
-        }
-        val element = stackTrace[index]
-        val methodName = element.methodName
-        val lineNumber = element.lineNumber
-        return "(${element.fileName}:${lineNumber})"
-    }
-
-    private fun getStackOffset(stackTrace: Array<StackTraceElement>,maxDepth: Int): Int {
-        if (null != stackTrace) {
-            if (stackTrace.size > maxDepth) {
-                return maxDepth
-            }
-            return stackTrace.size-1
-        }
-        return -1
-    }
-
 }

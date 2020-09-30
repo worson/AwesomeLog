@@ -1,7 +1,7 @@
 package com.langogo.lib.log.printer
 
-import com.langogo.lib.log.LogItem
-import com.langogo.lib.log.LogLevel
+import com.worson.lib.log.LogItem
+import com.worson.lib.log.LogLevel
 import com.langogo.lib.log.format.BasicFlattener
 import com.langogo.lib.log.format.Flattener
 import com.langogo.lib.log.internal.LogDebug
@@ -9,7 +9,6 @@ import com.langogo.lib.log.printer.file.DateFileNameGenerator
 import com.langogo.lib.log.printer.file.FileNameGenerator
 import com.langogo.lib.log.printer.file.backup.BackupStrategy
 import com.langogo.lib.log.printer.file.backup.FileSizeBackupStrategy
-import com.langogo.lib.log.printer.file.handler.DefaultLogHandler
 import com.langogo.lib.log.printer.file.handler.LogFileHandler
 import java.io.*
 import java.util.concurrent.BlockingQueue

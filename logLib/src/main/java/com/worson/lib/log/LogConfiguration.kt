@@ -1,7 +1,6 @@
-package com.langogo.lib.log
+package com.worson.lib.log
 
 import com.langogo.lib.log.format.BasicFlattener
-import com.langogo.lib.log.format.RawFlattener
 import com.langogo.lib.log.format.Flattener
 import com.langogo.lib.log.printer.Printer
 import java.util.*

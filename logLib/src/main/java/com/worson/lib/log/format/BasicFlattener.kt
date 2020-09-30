@@ -1,7 +1,7 @@
 package com.langogo.lib.log.format
 
-import com.langogo.lib.log.LogItem
-import com.langogo.lib.log.LogLevel
+import com.worson.lib.log.LogItem
+import com.worson.lib.log.LogLevel
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*

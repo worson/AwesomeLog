@@ -1,7 +1,7 @@
 package com.langogo.lib.log.printer
 
-import com.langogo.lib.log.LogItem
-import com.langogo.lib.log.LogLevel
+import com.worson.lib.log.LogItem
+import com.worson.lib.log.LogLevel
 
 /**
  * 说明:
